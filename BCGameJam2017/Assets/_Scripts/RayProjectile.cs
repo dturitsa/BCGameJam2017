@@ -25,16 +25,10 @@ public class RayProjectile : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.tag == "moleculeBoundary") {
-            Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
 
-        }else {
             gameObject.GetComponent<Collider>().enabled = false;
             transform.rotation = Quaternion.Euler(90, 0, 0);
-            GetComponent<Rigidbody>().velocity = transform.forward * 400;
-        }
-
-       
+            GetComponent<Rigidbody>().velocity = transform.forward * 400;  
         
     }
 }

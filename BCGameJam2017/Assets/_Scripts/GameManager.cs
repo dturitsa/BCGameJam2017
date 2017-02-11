@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-
-    private int carbonDioxideCounter, methaneCounter, h2oCounter,n2oCounter;
+    private PersistantData persistantData;
     private Vector3 randomPosition;
     private float x, y;
     public GameObject carbonDioxide, methane, h2o, n2o;
@@ -20,19 +19,19 @@ public class GameManager : MonoBehaviour {
     private float currentTemp;
 
     void Start() {
+        persistantData = (PersistantData)FindObjectOfType(typeof(PersistantData));
+
         currentTemp = startTemp;
 
-        carbonDioxideCounter = 10;
-        methaneCounter = 0;
-        spawnMolecules(carbonDioxide, 7);
-        spawnMolecules(methane, 3);
-        spawnMolecules(h2o, 5);
-        spawnMolecules(n2o, 2);
+        spawnMolecules(carbonDioxide, persistantData.carbonDioxideCounter);
+        spawnMolecules(methane, persistantData.methaneCounter);
+        spawnMolecules(h2o, persistantData.h2oCounter);
+        spawnMolecules(n2o, persistantData.n2oCounter);
     }
 
     void Update() {
         currentTemp += tempIncreaseRate * Time.deltaTime;
-        Debug.Log(currentTemp);
+       // Debug.Log(currentTemp);
     }
     public void reduceTemp() {
         currentTemp -= tempDecreaseRate;

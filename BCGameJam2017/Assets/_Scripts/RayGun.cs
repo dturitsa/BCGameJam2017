@@ -10,6 +10,7 @@ public class RayGun : MonoBehaviour {
     public float spread = 10f;
     public bool isPlayerControlled = true;
     public float rayVelocity = 50;
+    public float leftBound = -250, rightBound = 250;
     private float timeSinceFired = 0;
     // Use this for initialization
     void Start() {
@@ -38,6 +39,11 @@ public class RayGun : MonoBehaviour {
 
         //left right movement
         transform.Translate(Vector3.left * gunMoveSpeed * -Input.GetAxis("Horizontal") * Time.deltaTime, Space.World);
+        if (transform.position.x < leftBound)
+            transform.position = new Vector3(leftBound, transform.position.y, transform.position.z);
+
+        if (transform.position.x > rightBound)
+            transform.position = new Vector3(rightBound, transform.position.y, transform.position.z);
     }
 
     public void fire() {
