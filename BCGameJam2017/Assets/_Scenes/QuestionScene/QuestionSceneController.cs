@@ -35,11 +35,11 @@ public class QuestionSceneController : MonoBehaviour
     }
 
     //portability or something
-    const string MAIN_SCENE_NAME = "GameScene";
-    const string CO2_COUNT_VARNAME = "CO2Count";
-    const string METHANE_COUNT_VARNAME = "MethaneCount";
-    const string NOS_COUNT_VARNAME = "NosCount";
-    const string QUESTION_NUMBER_VARNAME = "QuestionsComplete"; //0-indexed
+    const string MAIN_SCENE_NAME = "GameplayScene";
+    //const string CO2_COUNT_VARNAME = "CO2Count";
+    //const string METHANE_COUNT_VARNAME = "MethaneCount";
+    //const string NOS_COUNT_VARNAME = "NosCount";
+    //const string QUESTION_NUMBER_VARNAME = "QuestionsComplete"; //0-indexed
     const string BACK_RESOURCE_FMTSTRING = "Questions/Question{0}Background";
     const string CARD_RESOURCE_FMTSTRING = "Questions/Question{0}Card{1}Side{2}";
 
@@ -49,8 +49,10 @@ public class QuestionSceneController : MonoBehaviour
     //private readonly string[] QUESTIONS = {"What is the correct answer?","",""};
 
     private readonly QuestionStruct[] QUESTIONS =   { new QuestionStruct("What is the correct answer?", new CardStruct(2,0,0), new CardStruct(0,0,0), new CardStruct(0,0,0)),
-                                                      new QuestionStruct("What is the correct answer (Q1)?", new CardStruct(2,0,0), new CardStruct(0,0,0), new CardStruct(0,0,0)),
-                                                      new QuestionStruct("Farmer Joe is contemplating what he will produce on his farm... \n What can he produce that will have the smallest contribution to green house gas emissions?", new CardStruct(0,5,0), new CardStruct(0,5,0), new CardStruct(0,3,0))
+                                                      new QuestionStruct("Suzy lives far away from school and needs a car to drive there... \n What kind of car should she buy?", new CardStruct(1,0,1), new CardStruct(3,0,0), new CardStruct(1,0,0)),
+                                                      new QuestionStruct("Farmer Joe is contemplating what he will produce on his farm... \n What can he produce that will have the smallest contribution to green house gas emissions?", new CardStruct(0,5,0), new CardStruct(0,5,0), new CardStruct(0,3,0)),
+                                                      new QuestionStruct("Janet is the CEO for a big company responsible for providing power to the city... \n How should she plan to provide power?", new CardStruct(1,0,0), new CardStruct(0,0,0), new CardStruct(4,0,2))
+
                                                     };
 
     enum ControllerState
@@ -72,25 +74,28 @@ public class QuestionSceneController : MonoBehaviour
     private int selectedCard;
     private ControllerState state;
     private float elapsed;
+    private PersistantData persistantData;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
         //for testing; TODO move to main menu
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
+        persistantData = (PersistantData)FindObjectOfType(typeof(PersistantData));
 
         //set state and elapsed
         state = ControllerState.Opening;
         elapsed = 0f;
 
         //grab card number
-        if(PlayerPrefs.HasKey(QUESTION_NUMBER_VARNAME))
+        if(persistantData.questionNumber > 0)
         {
-            cardNumber = PlayerPrefs.GetInt(QUESTION_NUMBER_VARNAME);
+            cardNumber = persistantData.questionNumber;
         }
         else
         {
-            cardNumber = 0;
+            cardNumber = 1;
+            persistantData.questionNumber = 1;
         }
 
         //testing
@@ -212,10 +217,12 @@ public class QuestionSceneController : MonoBehaviour
                 break;
             case ControllerState.Done:
                 //we're done so just end the scene already
-                PlayerPrefs.SetInt(CO2_COUNT_VARNAME, QUESTIONS[cardNumber].Cards[selectedCard].CO2Add + PlayerPrefs.GetInt(CO2_COUNT_VARNAME));
-                PlayerPrefs.SetInt(METHANE_COUNT_VARNAME, QUESTIONS[cardNumber].Cards[selectedCard].MethaneAdd + PlayerPrefs.GetInt(METHANE_COUNT_VARNAME));
-                PlayerPrefs.SetInt(NOS_COUNT_VARNAME, QUESTIONS[cardNumber].Cards[selectedCard].NosAdd + PlayerPrefs.GetInt(NOS_COUNT_VARNAME));
-                PlayerPrefs.SetInt(QUESTION_NUMBER_VARNAME, ++cardNumber);
+
+                persistantData.carbonDioxideCounter += QUESTIONS[cardNumber].Cards[selectedCard].CO2Add;
+                persistantData.methaneCounter += QUESTIONS[cardNumber].Cards[selectedCard].MethaneAdd;
+                persistantData.n2oCounter += QUESTIONS[cardNumber].Cards[selectedCard].NosAdd;
+                persistantData.questionNumber += 1;
+
                 SceneManager.LoadScene(MAIN_SCENE_NAME);
                 break;
             default:
