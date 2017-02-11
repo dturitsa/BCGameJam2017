@@ -75,6 +75,7 @@ public class QuestionSceneController : MonoBehaviour
     public AudioSource CardFlipSound;
     public AudioSource CardSlideSound;
     public AudioSource MusicSound;
+    public AudioSource ButtonSound;
 
     private int animationState;
     private int cardNumber; //actually question number, that's 11PM coding for you
@@ -268,6 +269,7 @@ public class QuestionSceneController : MonoBehaviour
 
         Debug.Log("Clicked continue button");
         elapsed = 0;
+        ButtonSound.Play();
         CardSlideSound.Play();
         state = ControllerState.ContinueSelected;
     }
