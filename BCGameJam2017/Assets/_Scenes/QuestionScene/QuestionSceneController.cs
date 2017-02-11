@@ -48,7 +48,9 @@ public class QuestionSceneController : MonoBehaviour
     //Frank would murder me, oh well
     //private readonly string[] QUESTIONS = {"What is the correct answer?","",""};
 
-    private readonly QuestionStruct[] QUESTIONS =   { new QuestionStruct("What is the correct answer?", new CardStruct(2,0,0), new CardStruct(0,0,0), new CardStruct(0,0,0))
+    private readonly QuestionStruct[] QUESTIONS =   { new QuestionStruct("What is the correct answer?", new CardStruct(2,0,0), new CardStruct(0,0,0), new CardStruct(0,0,0)),
+                                                      new QuestionStruct("What is the correct answer (Q1)?", new CardStruct(2,0,0), new CardStruct(0,0,0), new CardStruct(0,0,0)),
+                                                      new QuestionStruct("Farmer Joe is contemplating what he will produce on his farm... \n What can he produce that will have the smallest contribution to green house gas emissions?", new CardStruct(0,5,0), new CardStruct(0,5,0), new CardStruct(0,3,0))
                                                     };
 
     enum ControllerState
@@ -90,6 +92,9 @@ public class QuestionSceneController : MonoBehaviour
         {
             cardNumber = 0;
         }
+
+        //testing
+        //cardNumber = 2;
 
         //fill question text annd background
         QuestionText.text = QUESTIONS[cardNumber].Question;
