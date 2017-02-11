@@ -61,7 +61,7 @@ public class IntroSceneController : MonoBehaviour
 
                 //animationState is 0, start routine
                 StartCoroutine(PushCameraDownCoroutine(Camera,1.0f,time));
-                StartCoroutine(PushObjectsUpCoroutine(Intro1EntityGroup,5.0f, time));
+                StartCoroutine(PushObjectsUpCoroutine(Intro1EntityGroup,5.5f, time));
                 StartCoroutine(AwaitAnimationFinished(time));
                 FadeTextOn(Intro1Text, time);
 
