@@ -34,6 +34,6 @@ public class PersistantData : MonoBehaviour {
             SceneManager.LoadScene("GameplayScene");
 
         if (Input.GetKeyDown("x"))
-            SceneManager.LoadScene("QuestionsScene");
+            SceneManager.LoadScene("QuestionScene");
     }
 }

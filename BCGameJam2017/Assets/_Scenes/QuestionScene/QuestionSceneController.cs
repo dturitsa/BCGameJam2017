@@ -72,6 +72,10 @@ public class QuestionSceneController : MonoBehaviour
     public GameObject BackgroundObject;
     public Canvas FadeCanvas;
 
+    public AudioSource CardFlipSound;
+    public AudioSource CardSlideSound;
+    public AudioSource MusicSound;
+
     private int animationState;
     private int cardNumber; //actually question number, that's 11PM coding for you
     private int selectedCard;
@@ -145,19 +149,20 @@ public class QuestionSceneController : MonoBehaviour
                     //push
                     var activeCard = Cards[selectedCard];
 
-                    activeCard.transform.Translate(Vector3.back * 10.0f * Time.deltaTime, Space.World);
+                    activeCard.transform.Translate(Vector3.back * 20.0f * Time.deltaTime, Space.World);
 
-                    if(elapsed >= 0.5f)
+                    if(elapsed >= 0.25f)
                     {
                         animationState++;
                         elapsed = 0;
+                        CardFlipSound.Play();
                     }
 
                 }
                 else if(animationState == 1)
                 {
                     //flip
-                    float rotateSpeed = 120f;
+                    float rotateSpeed = 180f;
 
                     Debug.Log(Cards[1].transform.eulerAngles.y);
 
@@ -193,13 +198,14 @@ public class QuestionSceneController : MonoBehaviour
                     //push card up
                     var activeCard = Cards[selectedCard];
 
-                    activeCard.transform.Translate(Vector3.up * 20.0f * Time.deltaTime, Space.World);
+                    activeCard.transform.Translate(Vector3.up * 40.0f * Time.deltaTime, Space.World);
 
-                    if (elapsed >= 1.0f)
+                    if (elapsed >= 0.5f)
                     {
                         animationState++;
                         elapsed = 0;
                         StartFade();
+                        StartCoroutine(FadeOutMusicCoroutine());
                     }                    
 
                 }
@@ -249,6 +255,7 @@ public class QuestionSceneController : MonoBehaviour
         Debug.Log("Clicked card : " + cardNum);
         selectedCard = cardNum;
         elapsed = 0;
+        
         state = ControllerState.AnswerChosen;
     }
 
@@ -261,6 +268,7 @@ public class QuestionSceneController : MonoBehaviour
 
         Debug.Log("Clicked continue button");
         elapsed = 0;
+        CardSlideSound.Play();
         state = ControllerState.ContinueSelected;
     }
 
@@ -273,6 +281,19 @@ public class QuestionSceneController : MonoBehaviour
         fadeImg.canvasRenderer.SetAlpha(0f);
         FadeCanvas.gameObject.SetActive(true);
         fadeImg.CrossFadeAlpha(1.0f, FADE_TIME, false);
+    }
+
+    IEnumerator FadeOutMusicCoroutine()
+    {
+        float elapsed = 0.0001f;
+        while (elapsed < 1.0f)
+        {
+            elapsed += Time.deltaTime;
+            MusicSound.volume = 1.0f - elapsed; //this works as long as the fade time is one second
+            //Debug.Log(FADE_TIME - elapsed);
+            yield return new WaitForEndOfFrame();
+        }
+
     }
 
 }
