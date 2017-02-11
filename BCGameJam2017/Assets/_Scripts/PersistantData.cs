@@ -29,7 +29,7 @@ public class PersistantData : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log(SceneManager.GetActiveScene().name);
+        //Debug.Log(SceneManager.GetActiveScene().name);
         if (Input.GetKeyDown("z"))
             SceneManager.LoadScene("GameplayScene");
 

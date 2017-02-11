@@ -17,6 +17,9 @@ public class QuestionSceneController : MonoBehaviour
         {
             Question = question;
             Cards = new CardStruct[4];
+            Cards[1] = card1;
+            Cards[2] = card2;
+            Cards[3] = card3;
         }
     }
 
@@ -218,10 +221,16 @@ public class QuestionSceneController : MonoBehaviour
             case ControllerState.Done:
                 //we're done so just end the scene already
 
+                //Debug.Log(QUESTIONS[cardNumber].Question);
+                //Debug.Log(QUESTIONS[cardNumber].Cards[selectedCard].CO2Add);
+
                 persistantData.carbonDioxideCounter += QUESTIONS[cardNumber].Cards[selectedCard].CO2Add;
                 persistantData.methaneCounter += QUESTIONS[cardNumber].Cards[selectedCard].MethaneAdd;
                 persistantData.n2oCounter += QUESTIONS[cardNumber].Cards[selectedCard].NosAdd;
                 persistantData.questionNumber += 1;
+
+                
+                //Debug.Log(persistantData.carbonDioxideCounter);
 
                 SceneManager.LoadScene(MAIN_SCENE_NAME);
                 break;
