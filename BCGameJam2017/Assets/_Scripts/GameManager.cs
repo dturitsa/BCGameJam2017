@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour {
 
         if ((realLevelTimer - realgameEndTime) > 2 && !lostGame) {
             Time.timeScale = 1;
+            persistantData.firstTimePlaying = false;
             if(persistantData.questionNumber < 6)
                 SceneManager.LoadScene("QuestionScene");
             else
@@ -117,7 +118,7 @@ public class GameManager : MonoBehaviour {
             
     }
     private void tutorial() {
-        Time.timeScale = 1;
+        
         tip1Text.gameObject.SetActive(false);
         tip2Text.gameObject.SetActive(false);
         tip3Text.gameObject.SetActive(false);
@@ -129,13 +130,16 @@ public class GameManager : MonoBehaviour {
         else if (realLevelTimer > 9 && realLevelTimer < 13) {
             Time.timeScale = 0;
             tip2Text.gameObject.SetActive(true);   
-        }
-        else if (realLevelTimer > 17 && realLevelTimer < 21) {
+        }else if(realLevelTimer > 13 && realLevelTimer< 13.1){
+            Time.timeScale = 1;
+        }else if (realLevelTimer > 17 && realLevelTimer < 21) {
             Time.timeScale = 0;
             tip3Text.gameObject.SetActive(true);
         }else if (realLevelTimer > 21 && realLevelTimer < 25) {
             Time.timeScale = 0;
             tip4Text.gameObject.SetActive(true);
+        }else if(realLevelTimer > 25 && realLevelTimer < 25.1f){
+            Time.timeScale = 1;
         }
 
 
