@@ -24,12 +24,22 @@ public class RayGun : MonoBehaviour {
 
         if (isPlayerControlled) {
             aimGun();
-            if (Input.GetAxis("Fire1") > 0)
+            if (Input.GetAxis("Fire1") > 0) {
                 fire();
-        }else {
+                if (shootSound != null && !shootSound.isPlaying)
+                    shootSound.Play();   
+            }
+            else if (timeSinceFired > 2 * reloadTime &&shootSound != null) {
+                shootSound.Stop();
+            }
+                
+            
+        }
+        else {
             fire();
         }
     }
+
 
     private void aimGun() {
         //gun rotation
@@ -48,8 +58,10 @@ public class RayGun : MonoBehaviour {
     }
 
     public void fire() {
-        if (timeSinceFired < reloadTime)
+        if (timeSinceFired < reloadTime) {
             return;
+        }
+            
         timeSinceFired = 0;
         RayProjectile p = Instantiate(rayProjectile) as RayProjectile;
         p.transform.position = spawnPoint.position;
@@ -62,7 +74,6 @@ public class RayGun : MonoBehaviour {
       //  p.transform.rotation = transform.rotation;
         p.GetComponent<Rigidbody>().velocity = p.transform.forward * rayVelocity;
 
-        if(shootSound != null) 
-            shootSound.Play();
+           
     }
 }

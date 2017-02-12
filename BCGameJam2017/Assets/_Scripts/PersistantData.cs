@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PersistantData : MonoBehaviour {
-    static bool created = false;
+    public static bool created = false;
 
     public int carbonDioxideCounter, methaneCounter, h2oCounter, n2oCounter;
     public int questionNumber;

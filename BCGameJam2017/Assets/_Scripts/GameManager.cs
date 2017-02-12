@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
     public GameObject carbonDioxide, methane, h2o, n2o;
-    public AudioSource sizzleSOund;
+    public AudioSource sizzleSOund, winSound, loseSound;
     public float moleculeSpawnMinX = -200, moleculeSpawnMaxX = 200, moleculeSpawnMinY = 40, moleculeSpawnMaxY = 100;
     public float startTemp = 20;
     public float maxTemp = 100;
@@ -27,12 +27,11 @@ public class GameManager : MonoBehaviour {
     private float timeLeft;
     private Vector3 maxicebergSize;
     private float gameOverDuration = 2;
+    private bool lostGame = false;
 
     void Start() {
         persistantData = (PersistantData)FindObjectOfType(typeof(PersistantData));
-
         currentTemp = startTemp;
-
         spawnMolecules(carbonDioxide, persistantData.carbonDioxideCounter);
         spawnMolecules(methane, persistantData.methaneCounter);
         spawnMolecules(h2o, persistantData.h2oCounter);
@@ -41,10 +40,17 @@ public class GameManager : MonoBehaviour {
         waterStartY = water.position.y;
         iceStartY = iceberg.position.y;
         maxicebergSize = iceberg.localScale;
-        timeLeft = levelTimeLimit;
+        timeLeft = levelTimeLimit + 3;
     }
 
     void Update() {
+        if(timeLeft <= levelTimeLimit)
+            gameplayUpdate();
+        else
+            timeLeft -= Time.deltaTime;
+    }
+
+    private void gameplayUpdate() {
         currentTemp += tempIncreaseRate * Time.deltaTime;
         if (currentTemp > 100)
             currentTemp = 100;
@@ -54,22 +60,27 @@ public class GameManager : MonoBehaviour {
         thermometer.temp = currentTemp;
         smoothedWaterMovement();
 
-        if (currentTemp > 80 && !sizzleSOund.isPlaying) 
+        if (currentTemp > 80 && !sizzleSOund.isPlaying && !lostGame)
             sizzleSOund.Play();
-        else if(currentTemp < 80)
+        else if (currentTemp < 80 || lostGame)
             sizzleSOund.Stop();
 
-        
-       
-       
-
-        if(timeLeft < -2)
-            SceneManager.LoadScene("QuestionScene");
+        if (timeLeft < -2 && !lostGame) {
+            if(persistantData.questionNumber < 6)
+                SceneManager.LoadScene("QuestionScene");
+            else
+                SceneManager.LoadScene("MainMenuScene");
+        }
             
 
-        if (currentTemp >= 100) {
+
+        if (currentTemp >= 100 || lostGame) {
+            lostGame = true;
             timerText.text = "Game Over";
-            timeLeft -= Time.deltaTime;
+            currentTemp = 100;
+            if(!loseSound.isPlaying)
+                loseSound.Play();
+            //timeLeft -= Time.deltaTime;
             gameOverDuration -= Time.deltaTime;
             if (gameOverDuration <= 0)
                 SceneManager.LoadScene("MainMenuScene");
@@ -78,16 +89,13 @@ public class GameManager : MonoBehaviour {
             timeLeft -= Time.deltaTime;
             timerText.text = timeLeft.ToString("F0");
         }
-
         if (timeLeft <= 0) {
             timerText.text = "Success";
             currentTemp = 0;
+            if(!winSound.isPlaying)
+                winSound.Play();
         }
-
-
     }
-
-
     private void smoothedWaterMovement() {
         float tempDecimal = currentTemp / 100;
 

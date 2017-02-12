@@ -22,6 +22,7 @@ public class MainMenuController : MonoBehaviour
         var persistantData = (PersistantData)FindObjectOfType(typeof(PersistantData));
         if(persistantData != null)
         {
+            PersistantData.created = false;
             Destroy(persistantData.gameObject);
         }
 
