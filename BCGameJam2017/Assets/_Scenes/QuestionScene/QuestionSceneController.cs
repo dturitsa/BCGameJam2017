@@ -38,6 +38,7 @@ public class QuestionSceneController : MonoBehaviour
     }
 
     //portability or something
+    const float CARBON_GAIN_RATE = 1.0f;
     const string MAIN_SCENE_NAME = "GameplayScene";
     //const string CO2_COUNT_VARNAME = "CO2Count";
     //const string METHANE_COUNT_VARNAME = "MethaneCount";
@@ -54,8 +55,8 @@ public class QuestionSceneController : MonoBehaviour
     private readonly QuestionStruct[] QUESTIONS =   { new QuestionStruct("What is the correct answer?", new CardStruct(2,0,0), new CardStruct(0,0,0), new CardStruct(0,0,0)),
                                                       new QuestionStruct("Raj dropped his phone and shattered the screen! \n What should he do with it now?", new CardStruct(1,0,0), new CardStruct(2,0,0), new CardStruct(3,0,0)),
                                                       new QuestionStruct("Suzy lives far away from school and needs a car to drive there... \n What kind of car should she buy?", new CardStruct(4,0,2), new CardStruct(8,0,0), new CardStruct(2,0,0)),
-                                                      new QuestionStruct("Chen is planting a garden now that spring has sprung \n What kind of plants should he grow?", new CardStruct(-3,0,0), new CardStruct(-5,0,0), new CardStruct(-4,0,0)),
-                                                      new QuestionStruct("Farmer Joe is contemplating what he will produce on his farm... \n What can he produce that will have the smallest contribution to green house gas emissions?", new CardStruct(6,6,0), new CardStruct(6,2,0), new CardStruct(4,0,0)),
+                                                      new QuestionStruct("Chen is planting a garden now that spring has sprung \n What kind of plants should he grow?", new CardStruct(-2,0,0), new CardStruct(-4,0,0), new CardStruct(-3,0,0)),
+                                                      new QuestionStruct("Farmer Joe is contemplating what he will produce on his farm... \n What would be a good choice for him?", new CardStruct(6,6,0), new CardStruct(6,2,0), new CardStruct(4,0,0)),
                                                       new QuestionStruct("Janet is the CEO for a big company responsible for providing power to the city... \n How should she plan to provide power?", new CardStruct(5,0,0), new CardStruct(4,0,0), new CardStruct(20,0,5))
 
                                                     };
@@ -73,6 +74,7 @@ public class QuestionSceneController : MonoBehaviour
     public GameObject ContinueButton;
     public GameObject BackgroundObject;
     public Canvas FadeCanvas;
+    public Text CarbonText;
 
     public AudioSource CardFlipSound;
     public AudioSource CardSlideSound;
@@ -192,6 +194,12 @@ public class QuestionSceneController : MonoBehaviour
                     ContinueButton.SetActive(true);
                 }
 
+                if(!CarbonText.gameObject.activeSelf)
+                {
+                    //fill and fade in  carbon text
+                    FillAndFadeCarbonText();
+                }
+
                 break;
             case ControllerState.ContinueSelected:
                 //continue button pressed: play closing animation and await
@@ -233,6 +241,9 @@ public class QuestionSceneController : MonoBehaviour
 
                 //Debug.Log(QUESTIONS[cardNumber].Question);
                 //Debug.Log(QUESTIONS[cardNumber].Cards[selectedCard].CO2Add);
+
+                //persistantData.carbonDioxideCounter += Mathf.CeilToInt((float)cardNumber * CARBON_GAIN_RATE);
+                persistantData.carbonDioxideCounter += Mathf.CeilToInt(CARBON_GAIN_RATE);
 
                 persistantData.carbonDioxideCounter += QUESTIONS[cardNumber].Cards[selectedCard].CO2Add;
                 if (persistantData.carbonDioxideCounter < 0)
@@ -281,6 +292,42 @@ public class QuestionSceneController : MonoBehaviour
         ButtonSound.Play();
         CardSlideSound.Play();
         state = ControllerState.ContinueSelected;
+    }
+
+    const float CARBON_FADE_TIME = 0.5f;
+
+    private void FillAndFadeCarbonText()
+    {
+        var text = CarbonText;
+        string str;
+        int co2 = QUESTIONS[cardNumber].Cards[selectedCard].CO2Add;
+        int nos = QUESTIONS[cardNumber].Cards[selectedCard].NosAdd;
+        int meth = QUESTIONS[cardNumber].Cards[selectedCard].MethaneAdd;
+
+        if (co2 > 0)
+            str = string.Format("CO2: +{0}", co2);
+        else
+            str = string.Format("CO2: {0}", co2);
+
+        if (nos > 0)
+            str += string.Format(", N2O: +{0}", nos);
+        if (meth > 0)
+            str += string.Format(", Methane: +{0}", meth);
+
+        text.text = str;
+        text.gameObject.SetActive(true);
+        text.canvasRenderer.SetAlpha(0.01f);
+        if(co2 < 0)
+        {
+            text.color = Color.green;
+        }
+        else
+        {
+            text.color = Color.red;
+        }
+        text.CrossFadeAlpha(1.0f, CARBON_FADE_TIME, false);
+
+
     }
 
     const float FADE_TIME = 1.0f;
