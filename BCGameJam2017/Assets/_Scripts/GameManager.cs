@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour {
     public Transform water, iceberg;
     public temperature thermometer;
     public float levelTimeLimit = 30;
-    public Text timerText;
+    public Text timerText, tip1Text, tip2Text, tip3Text, tip4Text;
 
     private PersistantData persistantData;
     private Vector3 randomPosition;
@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour {
     private Vector3 maxicebergSize;
     private float gameOverDuration = 2;
     private bool lostGame = false;
+    private float realLevelTimer, realLevelStartTime;
 
     void Start() {
         persistantData = (PersistantData)FindObjectOfType(typeof(PersistantData));
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour {
         iceStartY = iceberg.position.y;
         maxicebergSize = iceberg.localScale;
         timeLeft = levelTimeLimit + 3;
+        realLevelStartTime = Time.realtimeSinceStartup;
     }
 
     void Update() {
@@ -48,9 +50,11 @@ public class GameManager : MonoBehaviour {
             gameplayUpdate();
         else
             timeLeft -= Time.deltaTime;
+        
     }
 
     private void gameplayUpdate() {
+        realLevelTimer = Time.realtimeSinceStartup - realLevelStartTime;
         currentTemp += tempIncreaseRate * Time.deltaTime;
         if (currentTemp > 100)
             currentTemp = 100;
@@ -93,7 +97,40 @@ public class GameManager : MonoBehaviour {
             if(!winSound.isPlaying)
                 winSound.Play();
         }
+        if (persistantData.firstTimePlaying) {
+            tutorial();
+        }
+            
     }
+    private void tutorial() {
+        Time.timeScale = 1;
+        tip1Text.gameObject.SetActive(false);
+        tip2Text.gameObject.SetActive(false);
+        tip3Text.gameObject.SetActive(false);
+        tip4Text.gameObject.SetActive(false);
+        if (realLevelTimer > 4.5 && realLevelTimer < 9) {
+            Time.timeScale = 0;
+            tip1Text.gameObject.SetActive(true);
+          
+        }
+        else if (realLevelTimer > 9 && realLevelTimer < 13) {
+            Time.timeScale = 0;
+            tip2Text.gameObject.SetActive(true);
+          
+        }
+        else if (realLevelTimer > 17 && realLevelTimer < 21) {
+            Time.timeScale = 0;
+            tip3Text.gameObject.SetActive(true);
+
+        }else if (realLevelTimer > 21 && realLevelTimer < 25) {
+            Time.timeScale = 0;
+            tip4Text.gameObject.SetActive(true);
+
+        }
+
+
+    }
+
     private void smoothedWaterMovement() {
         float tempDecimal = currentTemp / 100;
 
