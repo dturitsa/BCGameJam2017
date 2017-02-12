@@ -8,6 +8,7 @@ public class PersistantData : MonoBehaviour {
 
     public int carbonDioxideCounter, methaneCounter, h2oCounter, n2oCounter;
     public int questionNumber;
+    public bool firstTimePlaying = true;
 
     void Awake() {
 

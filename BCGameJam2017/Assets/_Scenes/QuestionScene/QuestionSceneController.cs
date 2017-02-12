@@ -129,6 +129,7 @@ public class QuestionSceneController : MonoBehaviour
 
         state = ControllerState.Opening;
 
+        persistantData.firstTimePlaying = false;
     }
 	
 	// Update is called once per frame

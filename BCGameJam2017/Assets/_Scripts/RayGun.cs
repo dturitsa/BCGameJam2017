@@ -20,24 +20,26 @@ public class RayGun : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        timeSinceFired += Time.deltaTime;
+        if(Time.timeScale != 0) {
+            timeSinceFired += Time.deltaTime;
 
-        if (isPlayerControlled) {
-            aimGun();
-            if (Input.GetAxis("Fire1") > 0) {
+            if (isPlayerControlled) {
+                aimGun();
+                if (Input.GetAxis("Fire1") > 0) {
+                    fire();
+                    if (shootSound != null && !shootSound.isPlaying)
+                        shootSound.Play();
+                }
+                else if (timeSinceFired > 2 * reloadTime && shootSound != null) {
+                    shootSound.Stop();
+                }
+
+
+            }
+            else 
                 fire();
-                if (shootSound != null && !shootSound.isPlaying)
-                    shootSound.Play();   
-            }
-            else if (timeSinceFired > 2 * reloadTime &&shootSound != null) {
-                shootSound.Stop();
-            }
-                
-            
         }
-        else {
-            fire();
-        }
+        
     }
 
 
