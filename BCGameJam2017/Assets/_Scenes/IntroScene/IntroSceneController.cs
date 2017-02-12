@@ -8,8 +8,10 @@ using UnityEngine.SceneManagement;
 public class IntroSceneController : MonoBehaviour
 {
     const float FADE_TIME = 1.0f;
+    
     const string NEXT_SCENE = "MainMenuScene";
-    const KeyCode SKIP_KEY = KeyCode.Space;
+    const KeyCode SKIP_KEY = KeyCode.Mouse0;
+    const float SKIP_HOLD = 2.0f;
 
     const float INTRO_STAY_TIME = 5.0f;
     const float INTRO_SLIDE_DELAY = 2.0f;
@@ -29,6 +31,7 @@ public class IntroSceneController : MonoBehaviour
 
     int introSlide;
     int animationState;
+    float holdCounter;
 
 	void Start ()
     {
@@ -41,19 +44,34 @@ public class IntroSceneController : MonoBehaviour
         Debug.Log("Intro slide: " + introSlide + " , Animation State: " + animationState);
         //on click advance? await initial fadein?
 
-		//general sequence:
+        //general sequence:
 
         //first fade in (do this before)
         //await fadein
-        if(introSlide == 0)
+        if (introSlide == 0)
         {
             return;
         }
 
-        //onclick advance?
+        //click and hold
+        if (Input.GetKey(SKIP_KEY))
+        {
+            holdCounter += Time.deltaTime;
+            if (holdCounter >= SKIP_HOLD)
+            {
+                introSlide = 4;
+                StopAllCoroutines();
+            }
+        }
+        else if (Input.GetKeyUp(SKIP_KEY))
+        {
+            holdCounter = 0f;
+        }
+
+
 
         //then pan to first slide (push camera down slightly, push entities up)
-        if(introSlide == 1)
+        if (introSlide == 1)
         {
             if(animationState == 0)
             {
