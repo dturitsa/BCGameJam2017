@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
     public GameObject carbonDioxide, methane, h2o, n2o;
@@ -14,15 +16,17 @@ public class GameManager : MonoBehaviour {
     public float waterSpeed = 10, iceSpeed = 20;
     public Transform water, iceberg;
     public temperature thermometer;
-
+    public float levelTimeLimit = 30;
+    public Text timerText;
 
     private PersistantData persistantData;
     private Vector3 randomPosition;
     private float x, y;
     private float currentTemp;
     private float waterStartY, iceStartY;
-
+    private float timeLeft;
     private Vector3 maxicebergSize;
+    private float gameOverDuration = 2;
 
     void Start() {
         persistantData = (PersistantData)FindObjectOfType(typeof(PersistantData));
@@ -37,6 +41,7 @@ public class GameManager : MonoBehaviour {
         waterStartY = water.position.y;
         iceStartY = iceberg.position.y;
         maxicebergSize = iceberg.localScale;
+        timeLeft = levelTimeLimit;
     }
 
     void Update() {
@@ -53,7 +58,36 @@ public class GameManager : MonoBehaviour {
             sizzleSOund.Play();
         else if(currentTemp < 80)
             sizzleSOund.Stop();
+
+        
+       
+       
+
+        if(timeLeft < -2)
+            SceneManager.LoadScene("QuestionScene");
+            
+
+        if (currentTemp >= 100) {
+            timerText.text = "Game Over";
+            timeLeft -= Time.deltaTime;
+            gameOverDuration -= Time.deltaTime;
+            if (gameOverDuration <= 0)
+                SceneManager.LoadScene("MainMenuScene");
+        }
+        else {
+            timeLeft -= Time.deltaTime;
+            timerText.text = timeLeft.ToString("F0");
+        }
+
+        if (timeLeft <= 0) {
+            timerText.text = "Success";
+            currentTemp = 0;
+        }
+
+
     }
+
+
     private void smoothedWaterMovement() {
         float tempDecimal = currentTemp / 100;
 
