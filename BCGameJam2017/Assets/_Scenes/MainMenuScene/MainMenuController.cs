@@ -24,9 +24,9 @@ public class MainMenuController : MonoBehaviour
         {
             //PersistantData.created = false;
             //Destroy(persistantData.gameObject);
-            persistantData.carbonDioxideCounter = 0;
+            persistantData.carbonDioxideCounter = 2;
             persistantData.n2oCounter = 0;
-            persistantData.h2oCounter = 0;
+            persistantData.h2oCounter = 3;
             persistantData.methaneCounter = 0;
             persistantData.questionNumber = 0;
         }
