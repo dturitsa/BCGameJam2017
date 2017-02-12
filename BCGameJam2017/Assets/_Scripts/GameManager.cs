@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour {
             if(persistantData.questionNumber < 6)
                 SceneManager.LoadScene("QuestionScene");
             else
-                SceneManager.LoadScene("MainMenuScene");
+                SceneManager.LoadScene("EndingScene");
         }
             
         if(currentTemp >= 100 && !lostGame) {
