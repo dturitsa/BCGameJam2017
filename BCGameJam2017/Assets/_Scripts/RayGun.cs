@@ -5,6 +5,7 @@ using UnityEngine;
 public class RayGun : MonoBehaviour {
     public Transform spawnPoint;
     public RayProjectile rayProjectile;
+    public AudioSource shootSound;
     public float gunMoveSpeed = 10;
     public float reloadTime = 1;
     public float spread = 10f;
@@ -59,6 +60,9 @@ public class RayGun : MonoBehaviour {
         p.transform.rotation = Quaternion.Euler(xDegrees, yDegrees, zDegrees);
 
       //  p.transform.rotation = transform.rotation;
-        p.GetComponent<Rigidbody>().velocity = p.transform.forward * rayVelocity;   
+        p.GetComponent<Rigidbody>().velocity = p.transform.forward * rayVelocity;
+
+        if(shootSound != null) 
+            shootSound.Play();
     }
 }
