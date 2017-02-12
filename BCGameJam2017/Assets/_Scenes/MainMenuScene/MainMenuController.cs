@@ -17,7 +17,14 @@ public class MainMenuController : MonoBehaviour
 
 	void Start ()
     {
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
+
+        var persistantData = (PersistantData)FindObjectOfType(typeof(PersistantData));
+        if(persistantData != null)
+        {
+            Destroy(persistantData.gameObject);
+        }
+
         StartInvertedFade();
 	}
 	
@@ -30,6 +37,7 @@ public class MainMenuController : MonoBehaviour
     public void ClickButtonStart()
     {
         if (fading) return;
+
         ClickButtonSound.Play();
         StartFade();
         StartCoroutine(FadeOutMusicCoroutine());
