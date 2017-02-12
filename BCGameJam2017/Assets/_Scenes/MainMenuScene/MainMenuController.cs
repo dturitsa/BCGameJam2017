@@ -22,8 +22,13 @@ public class MainMenuController : MonoBehaviour
         var persistantData = (PersistantData)FindObjectOfType(typeof(PersistantData));
         if(persistantData != null)
         {
-            PersistantData.created = false;
-            Destroy(persistantData.gameObject);
+            //PersistantData.created = false;
+            //Destroy(persistantData.gameObject);
+            persistantData.carbonDioxideCounter = 0;
+            persistantData.n2oCounter = 0;
+            persistantData.h2oCounter = 0;
+            persistantData.methaneCounter = 0;
+            persistantData.questionNumber = 0;
         }
 
         StartInvertedFade();
