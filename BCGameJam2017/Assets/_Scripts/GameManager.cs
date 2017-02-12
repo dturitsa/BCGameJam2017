@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
     public GameObject carbonDioxide, methane, h2o, n2o;
-    public AudioSource sizzleSOund, winSound, loseSound;
+    public AudioSource music, sizzleSOund, winSound, loseSound;
     public float moleculeSpawnMinX = -200, moleculeSpawnMaxX = 200, moleculeSpawnMinY = 40, moleculeSpawnMaxY = 100;
     public float startTemp = 20;
     public float maxTemp = 100;
@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour {
     private Vector3 maxicebergSize;
     private float gameOverDuration = 2;
     private bool lostGame = false;
-    private float realLevelTimer, realLevelStartTime;
+    private float realLevelTimer, realLevelStartTime, realgameEndTime;
 
     void Start() {
         persistantData = (PersistantData)FindObjectOfType(typeof(PersistantData));
@@ -43,14 +43,14 @@ public class GameManager : MonoBehaviour {
         maxicebergSize = iceberg.localScale;
         timeLeft = levelTimeLimit + 3;
         realLevelStartTime = Time.realtimeSinceStartup;
+        realgameEndTime = 99999999;
     }
 
     void Update() {
         if(timeLeft <= levelTimeLimit)
             gameplayUpdate();
         else
-            timeLeft -= Time.deltaTime;
-        
+            timeLeft -= Time.deltaTime;    
     }
 
     private void gameplayUpdate() {
@@ -69,29 +69,43 @@ public class GameManager : MonoBehaviour {
         else if (currentTemp < 80 || lostGame)
             sizzleSOund.Stop();
 
-        if (timeLeft < -2 && !lostGame) {
+        if ((realLevelTimer - realgameEndTime) > 2 && !lostGame) {
+            Time.timeScale = 1;
             if(persistantData.questionNumber < 6)
                 SceneManager.LoadScene("QuestionScene");
             else
                 SceneManager.LoadScene("MainMenuScene");
         }
             
-        if (currentTemp >= 100 || lostGame) {
+        if(currentTemp >= 100 && !lostGame) {
+            Time.timeScale = 0;
             lostGame = true;
+            realgameEndTime = realLevelTimer;
+        }
+        if (currentTemp >= 100 || lostGame) {
             timerText.text = "Game Over";
             currentTemp = 100;
             if(!loseSound.isPlaying)
                 loseSound.Play();
             //timeLeft -= Time.deltaTime;
-            gameOverDuration -= Time.deltaTime;
-            if (gameOverDuration <= 0)
+
+
+            if ((realLevelTimer - realgameEndTime) > 2) {
+                Time.timeScale = 1;
                 SceneManager.LoadScene("MainMenuScene");
+            }
+                
         }
-        else {
+        else if(Time.timeScale > 0) {
             timeLeft -= Time.deltaTime;
             timerText.text = timeLeft.ToString("F0");
+            if (!music.isPlaying)
+                music.Play();
         }
         if (timeLeft <= 0) {
+            Time.timeScale = 0;
+            timeLeft = .1f; //horrible hack to keep timer above 0 when you win
+            realgameEndTime = realLevelTimer;
             timerText.text = "Success";
             currentTemp = 0;
             if(!winSound.isPlaying)
@@ -110,22 +124,18 @@ public class GameManager : MonoBehaviour {
         tip4Text.gameObject.SetActive(false);
         if (realLevelTimer > 4.5 && realLevelTimer < 9) {
             Time.timeScale = 0;
-            tip1Text.gameObject.SetActive(true);
-          
+            tip1Text.gameObject.SetActive(true); 
         }
         else if (realLevelTimer > 9 && realLevelTimer < 13) {
             Time.timeScale = 0;
-            tip2Text.gameObject.SetActive(true);
-          
+            tip2Text.gameObject.SetActive(true);   
         }
         else if (realLevelTimer > 17 && realLevelTimer < 21) {
             Time.timeScale = 0;
             tip3Text.gameObject.SetActive(true);
-
         }else if (realLevelTimer > 21 && realLevelTimer < 25) {
             Time.timeScale = 0;
             tip4Text.gameObject.SetActive(true);
-
         }
 
 
