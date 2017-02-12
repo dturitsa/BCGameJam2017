@@ -52,9 +52,11 @@ public class QuestionSceneController : MonoBehaviour
     //private readonly string[] QUESTIONS = {"What is the correct answer?","",""};
 
     private readonly QuestionStruct[] QUESTIONS =   { new QuestionStruct("What is the correct answer?", new CardStruct(2,0,0), new CardStruct(0,0,0), new CardStruct(0,0,0)),
-                                                      new QuestionStruct("Suzy lives far away from school and needs a car to drive there... \n What kind of car should she buy?", new CardStruct(1,0,1), new CardStruct(3,0,0), new CardStruct(1,0,0)),
-                                                      new QuestionStruct("Farmer Joe is contemplating what he will produce on his farm... \n What can he produce that will have the smallest contribution to green house gas emissions?", new CardStruct(0,5,0), new CardStruct(0,5,0), new CardStruct(0,3,0)),
-                                                      new QuestionStruct("Janet is the CEO for a big company responsible for providing power to the city... \n How should she plan to provide power?", new CardStruct(1,0,0), new CardStruct(0,0,0), new CardStruct(4,0,2))
+                                                      new QuestionStruct("Raj dropped his phone and shattered the screen! \n What should he do with it now?", new CardStruct(1,0,0), new CardStruct(2,0,0), new CardStruct(3,0,0)),
+                                                      new QuestionStruct("Suzy lives far away from school and needs a car to drive there... \n What kind of car should she buy?", new CardStruct(4,0,2), new CardStruct(8,0,0), new CardStruct(2,0,0)),
+                                                      new QuestionStruct("Chen is planting a garden now that spring has sprung \n What kind of plants should he grow?", new CardStruct(-3,0,0), new CardStruct(-5,0,0), new CardStruct(-4,0,0)),
+                                                      new QuestionStruct("Farmer Joe is contemplating what he will produce on his farm... \n What can he produce that will have the smallest contribution to green house gas emissions?", new CardStruct(6,6,0), new CardStruct(6,2,0), new CardStruct(4,0,0)),
+                                                      new QuestionStruct("Janet is the CEO for a big company responsible for providing power to the city... \n How should she plan to provide power?", new CardStruct(5,0,0), new CardStruct(4,0,0), new CardStruct(20,0,5))
 
                                                     };
 
@@ -232,8 +234,14 @@ public class QuestionSceneController : MonoBehaviour
                 //Debug.Log(QUESTIONS[cardNumber].Cards[selectedCard].CO2Add);
 
                 persistantData.carbonDioxideCounter += QUESTIONS[cardNumber].Cards[selectedCard].CO2Add;
+                if (persistantData.carbonDioxideCounter < 0)
+                    persistantData.carbonDioxideCounter = 0;
                 persistantData.methaneCounter += QUESTIONS[cardNumber].Cards[selectedCard].MethaneAdd;
+                if (persistantData.methaneCounter < 0)
+                    persistantData.methaneCounter = 0;
                 persistantData.n2oCounter += QUESTIONS[cardNumber].Cards[selectedCard].NosAdd;
+                if (persistantData.n2oCounter < 0)
+                    persistantData.n2oCounter = 0;
                 persistantData.questionNumber += 1;
 
                 
