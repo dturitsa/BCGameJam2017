@@ -72,8 +72,6 @@ public class GameManager : MonoBehaviour {
                 SceneManager.LoadScene("MainMenuScene");
         }
             
-
-
         if (currentTemp >= 100 || lostGame) {
             lostGame = true;
             timerText.text = "Game Over";
