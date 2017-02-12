@@ -54,7 +54,7 @@ public class IntroSceneController : MonoBehaviour
         }
 
         //click and hold
-        if (Input.GetKey(SKIP_KEY))
+        if (Input.GetKey(SKIP_KEY) && introSlide < 4)
         {
             holdCounter += Time.deltaTime;
             if (holdCounter >= SKIP_HOLD)
