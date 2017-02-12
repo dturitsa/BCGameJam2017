@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour {
     private float currentTemp;
     private float waterStartY, iceStartY;
 
+    private Vector3 maxicebergSize;
+
     void Start() {
         persistantData = (PersistantData)FindObjectOfType(typeof(PersistantData));
 
@@ -33,16 +35,36 @@ public class GameManager : MonoBehaviour {
 
         waterStartY = water.position.y;
         iceStartY = iceberg.position.y;
+        maxicebergSize = iceberg.localScale;
     }
 
     void Update() {
         currentTemp += tempIncreaseRate * Time.deltaTime;
+        if (currentTemp > 100)
+            currentTemp = 100;
+        if (currentTemp < 0)
+            currentTemp = 0;
         // Debug.Log(currentTemp);
         thermometer.temp = currentTemp;
+        smoothedWaterMovement();
     }
     private void smoothedWaterMovement() {
-        Vector3 waterTarget = new Vector3(water.position.x, waterStartY + WaterMovementRange * currentTemp);
-      //  water.position = Vector3.MoveTowards(transform.position, target.position, waterSpeed * Time.deltaTime);
+        float tempDecimal = currentTemp / 100;
+
+        Vector3 waterTarget = new Vector3(water.position.x, waterStartY + WaterMovementRange * tempDecimal, water.position.z);
+        //Vector3 movePos = Vector3.MoveTowards(transform.position, waterTarget, .0001f * Time.deltaTime);
+        if(water.position.y < waterTarget.y)
+            water.Translate(Vector3.up * waterSpeed *  Time.deltaTime, Space.World);
+        if (water.position.y > waterTarget.y)
+            water.Translate(Vector3.up * -waterSpeed * Time.deltaTime, Space.World);
+
+        Vector3 icebergTargetSize = new Vector3(maxicebergSize.x * (1 - tempDecimal), maxicebergSize.y * (1 - tempDecimal), maxicebergSize.z * (1 - tempDecimal));
+        if (iceberg.localScale.x < icebergTargetSize.x) {
+            iceberg.localScale += new Vector3(iceSpeed * Time.deltaTime, iceSpeed * Time.deltaTime, iceSpeed * Time.deltaTime);
+        }
+        else {
+            iceberg.localScale += new Vector3(-iceSpeed * Time.deltaTime, -iceSpeed * Time.deltaTime, -iceSpeed * Time.deltaTime);
+        }      
     }
 
     public void reduceTemp() {
