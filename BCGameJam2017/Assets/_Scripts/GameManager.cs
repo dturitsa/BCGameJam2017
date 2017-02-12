@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     public GameObject carbonDioxide, methane, h2o, n2o;
+    public AudioSource sizzleSOund;
     public float moleculeSpawnMinX = -200, moleculeSpawnMaxX = 200, moleculeSpawnMinY = 40, moleculeSpawnMaxY = 100;
     public float startTemp = 20;
     public float maxTemp = 100;
@@ -47,6 +48,11 @@ public class GameManager : MonoBehaviour {
         // Debug.Log(currentTemp);
         thermometer.temp = currentTemp;
         smoothedWaterMovement();
+
+        if (currentTemp > 80 && !sizzleSOund.isPlaying) 
+            sizzleSOund.Play();
+        else if(currentTemp < 80)
+            sizzleSOund.Stop();
     }
     private void smoothedWaterMovement() {
         float tempDecimal = currentTemp / 100;
