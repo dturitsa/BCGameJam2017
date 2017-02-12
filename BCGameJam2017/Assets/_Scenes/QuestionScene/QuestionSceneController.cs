@@ -35,6 +35,11 @@ public class QuestionSceneController : MonoBehaviour
             MethaneAdd = methaneadd;
             NosAdd = nosadd;
         }
+
+        public int GetTotalBadness()
+        {
+            return CO2Add + MethaneAdd + NosAdd;
+        }
     }
 
     //portability or something
@@ -304,6 +309,8 @@ public class QuestionSceneController : MonoBehaviour
         int nos = QUESTIONS[cardNumber].Cards[selectedCard].NosAdd;
         int meth = QUESTIONS[cardNumber].Cards[selectedCard].MethaneAdd;
 
+        int totalBadness = co2 + nos + meth;
+
         if (co2 > 0)
             str = string.Format("CO2: +{0}", co2);
         else
@@ -321,9 +328,17 @@ public class QuestionSceneController : MonoBehaviour
         {
             text.color = Color.green;
         }
-        else
+        else if(totalBadness >= QUESTIONS[cardNumber].Cards[1].GetTotalBadness() && totalBadness >= QUESTIONS[cardNumber].Cards[2].GetTotalBadness() && totalBadness >= QUESTIONS[cardNumber].Cards[3].GetTotalBadness())
         {
             text.color = Color.red;
+        }
+        else if (totalBadness <= QUESTIONS[cardNumber].Cards[1].GetTotalBadness() && totalBadness <= QUESTIONS[cardNumber].Cards[2].GetTotalBadness() && totalBadness <= QUESTIONS[cardNumber].Cards[3].GetTotalBadness())
+        {
+            text.color = Color.blue;
+        }
+        else
+        {
+            text.color = Color.black;
         }
         text.CrossFadeAlpha(1.0f, CARBON_FADE_TIME, false);
 
