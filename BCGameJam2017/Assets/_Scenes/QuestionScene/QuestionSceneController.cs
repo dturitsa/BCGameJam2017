@@ -241,7 +241,8 @@ public class QuestionSceneController : MonoBehaviour
                 //Debug.Log(QUESTIONS[cardNumber].Question);
                 //Debug.Log(QUESTIONS[cardNumber].Cards[selectedCard].CO2Add);
 
-                persistantData.carbonDioxideCounter += Mathf.CeilToInt((float)cardNumber * CARBON_GAIN_RATE);
+                //persistantData.carbonDioxideCounter += Mathf.CeilToInt((float)cardNumber * CARBON_GAIN_RATE);
+                persistantData.carbonDioxideCounter += Mathf.CeilToInt(CARBON_GAIN_RATE);
 
                 persistantData.carbonDioxideCounter += QUESTIONS[cardNumber].Cards[selectedCard].CO2Add;
                 if (persistantData.carbonDioxideCounter < 0)
