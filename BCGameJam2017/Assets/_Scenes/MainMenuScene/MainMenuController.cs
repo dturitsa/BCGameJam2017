@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
-    const string GAME_SCENE_NAME = "GameScene";
+    const string GAME_SCENE_NAME = "GameplayScene";
     const string ABOUT_SCENE_NAME = "AboutScene";
 
     public Canvas FadeCanvas;

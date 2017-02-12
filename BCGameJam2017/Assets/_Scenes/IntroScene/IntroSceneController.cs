@@ -12,7 +12,7 @@ public class IntroSceneController : MonoBehaviour
     const KeyCode SKIP_KEY = KeyCode.Space;
 
     const float INTRO_STAY_TIME = 5.0f;
-    const float INTRO_SLIDE_DELAY = 2.5f;
+    const float INTRO_SLIDE_DELAY = 2.0f;
     const float INTRO_POSTROLL_DELAY = 1.0f;
 
     public GameObject Camera;
@@ -25,6 +25,7 @@ public class IntroSceneController : MonoBehaviour
 
     public Canvas FadeCanvas;
     public AudioSource MusicSound;
+    public AudioSource Intro1Sound;
 
     int introSlide;
     int animationState;
@@ -74,7 +75,7 @@ public class IntroSceneController : MonoBehaviour
             else if(animationState == 2)
             {
                 //objects are on screen but waiting hasn't begun
-
+                Intro1Sound.Play();
                 StartCoroutine(AwaitAnimationFinished(INTRO_STAY_TIME));
 
                 animationState = 3;
